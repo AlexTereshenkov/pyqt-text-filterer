@@ -254,13 +254,14 @@ class MainWindow(QMainWindow):
         name = QFileDialog.getOpenFileName(self, "Open text file")
         file_path = name[0]
         if file_path:
-            self.encoding = self._detect_encoding(file_path)
             try:
+                self.encoding = self._detect_encoding(file_path)
                 with io.open(file_path, encoding=self.encoding) as f:
                     self.textfile_data = f.readlines()
             except Exception:
                 # if we failed to guess the encoding, fall back to UTF-8
-                with io.open(file_path, encoding='utf-8') as f:
+                self.encoding = 'utf-8'
+                with io.open(file_path, encoding=self.encoding) as f:
                     self.textfile_data = f.readlines()
 
             longest_textline = max([(i) for i in self.textfile_data], key=len)
